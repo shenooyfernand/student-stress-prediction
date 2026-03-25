@@ -20,3 +20,10 @@ using psychological, physiological, lifestyle, and academic variables.
 - Random Forest achieved the best performance: test accuracy 90.45%, Distress F1-score: 0.89
 - Top predictors: blood pressure, sleep quality, teacher-student relationship, academic performance
 - Cluster analysis aligned strongly with true stress labels
+
+### Web Application
+An interactive web application was developed to predict 
+student stress level from user inputs based on the trained 
+Random Forest model.
+
+Built with: Python
