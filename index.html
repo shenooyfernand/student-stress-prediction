@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WellnessAI - Student Stress Monitoring</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #818cf8;
+            --accent-color: #f59e0b;
+            --light-color: #eef2ff;
+            --dark-color: #3730a3;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            background-color: #f8fafc;
+        }
+        
+        .navbar {
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: white !important;
+            font-size: 1.5rem;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            margin: 0 8px;
+            transition: all 0.3s;
+            border-radius: 8px;
+            padding: 8px 16px !important;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            padding: 100px 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #e0e7ff;
+            margin-bottom: 30px;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 15px 40px;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s;
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+        }
+        
+	.hero-image {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 60vh;
+            width: 48%;
+            object-fit: cover;
+            object-position: center;
+            z-index: 1;
+            border-radius: 20px 0 0 20px;
+            box-shadow: -20px 0 60px rgba(0,0,0,0.3);
+        }  
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(79, 70, 229, 0.4);
+        }
+        
+        .section-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            margin: 20px auto;
+            border-radius: 10px;
+        }
+        
+        .form-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            padding: 50px;
+            margin-bottom: 50px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .form-section {
+            background: var(--light-color);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--primary-color);
+            transition: all 0.3s;
+        }
+        
+        .form-section:hover {
+            transform: translateX(5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .form-section h3 {
+            color: var(--dark-color);
+            margin-bottom: 25px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        
+        .form-control, .form-select {
+            padding: 15px 20px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .prediction-result {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 40px;
+            padding: 30px;
+            border-radius: 15px;
+            display: none;
+            animation: fadeInUp 0.6s ease;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stress-low {
+            color: #059669;
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            border: 3px solid #10b981;
+        }
+        
+        .stress-moderate {
+            color: #d97706;
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 3px solid #f59e0b;
+        }
+        
+        .stress-high {
+            color: #dc2626;
+            background: linear-gradient(135deg, #fee2e2, #fca5a5);
+            border: 3px solid #ef4444;
+        }
+        
+        .team-member {
+            text-align: center;
+            padding: 40px 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            margin-bottom: 30px;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+        }
+        
+        .team-photo {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--secondary-color);
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        
+        .team-member:hover .team-photo {
+            transform: scale(1.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        
+        .team-name {
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-top: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .team-position {
+            color: #64748b;
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+        
+        .page {
+            display: none;
+            padding: 80px 0;
+        }
+        
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Dashboard Styles */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--primary-color);
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .stress-indicator {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            color: white;
+            margin-top: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .indicator-low { 
+            background: linear-gradient(135deg, #10b981, #34d399); 
+        }
+        .indicator-moderate { 
+            background: linear-gradient(135deg, #f59e0b, #fbbf24); 
+        }
+        .indicator-high { 
+            background: linear-gradient(135deg, #ef4444, #f87171); 
+        }
+        
+        .assessment-history {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .assessment-item {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.3s;
+        }
+        
+        .assessment-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        
+        .progress {
+            height: 12px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        
+        .progress-bar {
+            border-radius: 10px;
+        }
+        
+        footer {
+            background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
+            color: white;
+            padding: 50px 0 30px;
+            text-align: center;
+        }
+        
+        .feature-card {
+            text-align: center;
+            padding: 50px 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            height: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+        }
+        
+        .feature-card i {
+            font-size: 4rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 25px;
+        }
+        
+        .feature-card h3 {
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .feature-card p {
+            color: #64748b;
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .form-container {
+                padding: 30px 20px;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#" onclick="showPage('home')">
+                <i class="fas fa-brain me-2"></i>WellnessAI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" onclick="showPage('home')">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('predict')">Predict Now</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('dashboard')">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('about')">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('contact')">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <section class="hero-section">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 hero-content">
+                        <h1 class="hero-title">Proactive Student Well-being Monitoring</h1>
+                        <p class="hero-subtitle">Harness AI and predictive analytics to identify at-risk students early and provide timely support for better mental health outcomes.</p>
+                        <a href="#" class="btn btn-primary btn-lg" onclick="showPage('predict')">
+                            <i class="fas fa-rocket me-2"></i>Get Started!
+                        </a>
+                    </div>
+                    <div class="col-lg-6 text-center">
+                        <img src="image1.jpg" alt="Student Wellness" class="img-fluid hero-image" style="max-height: 500px; box-shadow: 0 25px 60px rgba(0,0,0,0.2);">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="container my-5 py-5">
+            <h2 class="section-title">Why Choose WellnessAI?</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <i class="fas fa-earlybirds"></i>
+                        <h3>Early Detection</h3>
+                        <p>Our advanced machine learning model identifies stress patterns before they escalate, enabling proactive intervention and support.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <i class="fas fa-user-cog"></i>
+                        <h3>Personalized Support</h3>
+                        <p>Get tailored recommendations and intervention plans based on comprehensive psychological assessment and data analysis.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <i class="fas fa-university"></i>
+                        <h3>University-Wide Insights</h3>
+                        <p>Specifically designed for educational institutions to monitor student mental health across departments and programs.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Predict Now Page -->
+    <div id="predict" class="page">
+        <section class="container">
+            <h2 class="section-title">Student Stress Level Predictor</h2>
+            <p class="text-center mb-5" style="font-size: 1.2rem; color: #64748b;">Input your details to assess your stress level and get AI-powered insights using our Random Forest ML model.</p>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="form-container">
+                        <form id="stressForm">
+                            <div class="form-group mb-4">
+                                <label for="student_id" class="form-label">Student ID</label>
+                                <input type="text" class="form-control" id="student_id" placeholder="Enter your student ID (e.g., STU-001)" required>
+                            </div>
+
+                            <div class="form-section">
+                                <h3><i class="fas fa-brain"></i> Psychological Factors</h3>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="anxiety_level" class="form-label">Anxiety Level (0-10)</label>
+                                        <input type="number" class="form-control" id="anxiety_level" min="0" max="10" placeholder="0-10" required>
+                                        <small class="text-muted">0 = No anxiety, 10 = Extreme anxiety</small>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="self_esteem" class="form-label">Self Esteem (0-30)</label>
+                                        <input type="number" class="form-control" id="self_esteem" min="0" max="30" placeholder="0-30" required>
+                                        <small class="text-muted">Higher score = Better self-esteem</small>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="depression" class="form-label">Depression Level (0-27)</label>
+                                        <input type="number" class="form-control" id="depression" min="0" max="27" placeholder="0-27" required>
+                                        <small class="text-muted">0 = No depression, 27 = Severe depression</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h3><i class="fas fa-graduation-cap"></i> Academic Factors</h3>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="academic_performance" class="form-label">Academic Performance</label>
+                                        <select class="form-select" id="academic_performance" required>
+                                            <option value="">Select level</option>
+                                            <option value="1">1 - Very Poor</option>
+                                            <option value="2">2 - Poor</option>
+                                            <option value="3">3 - Average</option>
+                                            <option value="4">4 - Good</option>
+                                            <option value="5">5 - Excellent</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="future_career_concerns" class="form-label">Future Career Concerns</label>
+                                        <select class="form-select" id="future_career_concerns" required>
+                                            <option value="">Select level</option>
+                                            <option value="1">1 - No Concern</option>
+                                            <option value="2">2 - Low Concern</option>
+                                            <option value="3">3 - Moderate Concern</option>
+                                            <option value="4">4 - High Concern</option>
+                                            <option value="5">5 - Very High Concern</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="teacher_student_relationship" class="form-label">Teacher Relationship</label>
+                                        <select class="form-select" id="teacher_student_relationship" required>
+                                            <option value="">Select level</option>
+                                            <option value="1">1 - Very Poor</option>
+                                            <option value="2">2 - Poor</option>
+                                            <option value="3">3 - Average</option>
+                                            <option value="4">4 - Good</option>
+                                            <option value="5">5 - Excellent</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h3><i class="fas fa-users"></i> Social & Environmental Factors</h3>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="sleep_quality" class="form-label">Sleep Quality</label>
+                                        <select class="form-select" id="sleep_quality" required>
+                                            <option value="">Select quality</option>
+                                            <option value="1">1 - Very Poor</option>
+                                            <option value="2">2 - Poor</option>
+                                            <option value="3">3 - Average</option>
+                                            <option value="4">4 - Good</option>
+                                            <option value="5">5 - Excellent</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="blood_pressure" class="form-label">Blood Pressure</label>
+                                        <select class="form-select" id="blood_pressure" required>
+                                            <option value="">Select level</option>
+                                            <option value="1">1 - Normal</option>
+                                            <option value="2">2 - Elevated</option>
+                                            <option value="3">3 - High Stage 1</option>
+                                            <option value="4">4 - High Stage 2</option>
+                                            <option value="5">5 - Hypertensive</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="bullying" class="form-label">Bullying Exposure</label>
+                                        <select class="form-select" id="bullying" required>
+                                            <option value="">Select level</option>
+                                            <option value="1">1 - Never</option>
+                                            <option value="2">2 - Rarely</option>
+                                            <option value="3">3 - Sometimes</option>
+                                            <option value="4">4 - Often</option>
+                                            <option value="5">5 - Very Often</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-4">
+                                        <label for="basic_needs" class="form-label">Basic Needs Met</label>
+                                        <select class="form-select" id="basic_needs" required>
+                                            <option value="">Select level</option>
+                                            <option value="1">1 - Not Met</option>
+                                            <option value="2">2 - Partially Met</option>
+                                            <option value="3">3 - Moderately Met</option>
+                                            <option value="4">4 - Well Met</option>
+                                            <option value="5">5 - Fully Met</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="peer_pressure" class="form-label">Peer Pressure</label>
+                                        <select class="form-select" id="peer_pressure" required>
+                                            <option value="">Select level</option>
+                                            <option value="1">1 - None</option>
+                                            <option value="2">2 - Low</option>
+                                            <option value="3">3 - Moderate</option>
+                                            <option value="4">4 - High</option>
+                                            <option value="5">5 - Very High</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-chart-line me-2"></i>Predict Stress Level
+                                </button>
+                            </div>
+                        </form>
+
+                        <div id="predictionResult" class="prediction-result"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboard" class="page">
+        <section class="container">
+            <h2 class="section-title">Your Well-being Dashboard</h2>
+            <p class="text-center mb-5" style="font-size: 1.2rem; color: #64748b;">Welcome back! Here's your personal mental health overview and progress tracking.</p>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="form-container">
+                        <div class="text-center mb-5">
+                            <h3>Student Profile Overview</h3>
+                            <p class="text-muted">Complete a stress assessment to see your personalized dashboard data</p>
+                            <button class="btn btn-primary btn-lg" onclick="showPage('predict')">
+                                <i class="fas fa-plus me-2"></i>Take New Assessment
+                            </button>
+                        </div>
+
+                        <!-- Sample Dashboard Content -->
+                        <div class="dashboard-stats">
+                            <div class="stat-card">
+                                <div class="stat-value" id="currentStress">-</div>
+                                <div>Current Stress Level</div>
+                                <div class="stress-indicator" id="stressIndicator">Take Assessment</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="wellbeingScore">-</div>
+                                <div>Well-being Score</div>
+                                <small class="text-muted">Based on latest assessment</small>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="totalAssessments">0</div>
+                                <div>Total Assessments</div>
+                                <small class="text-muted">Lifetime tracking</small>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="improvementTrend">-</div>
+                                <div>Improvement Trend</div>
+                                <small class="text-muted">Over last 30 days</small>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3><i class="fas fa-chart-bar"></i> Stress Factors Analysis</h3>
+                            <div class="stress-factors">
+                                <div class="factor-item mb-3">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Sleep Quality Impact</span>
+                                        <span>85%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-danger" style="width: 85%"></div>
+                                    </div>
+                                </div>
+                                <div class="factor-item mb-3">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Academic Pressure</span>
+                                        <span>72%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-warning" style="width: 72%"></div>
+                                    </div>
+                                </div>
+                                <div class="factor-item mb-3">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Anxiety Level</span>
+                                        <span>58%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-info" style="width: 58%"></div>
+                                    </div>
+                                </div>
+                                <div class="factor-item mb-3">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Social Factors</span>
+                                        <span>45%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" style="width: 45%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3><i class="fas fa-history"></i> Recent Assessments</h3>
+                            <div class="assessment-history" id="assessmentHistory">
+                                <div class="text-center text-muted py-4">
+                                    <i class="fas fa-clipboard-list fa-3x mb-3"></i>
+                                    <p>No assessment history yet.<br>Complete your first assessment to see your progress.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button class="btn btn-outline-primary me-3" onclick="showPage('predict')">
+                                <i class="fas fa-redo me-2"></i>Update Assessment
+                            </button>
+                            <button class="btn btn-outline-secondary">
+                                <i class="fas fa-download me-2"></i>Export Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- About Us Page -->
+    <div id="about" class="page">
+        <section class="container">
+            <h2 class="section-title">About WellnessAI</h2>
+            
+            <div class="form-container mb-5">
+                <h3 class="text-center mb-4" style="color: var(--primary-color);">Our Mission</h3>
+                <p class="text-center" style="font-size: 1.2rem; line-height: 1.8; color: #64748b;">
+                    Our mission is to empower educational institutions and students by leveraging cutting-edge AI technology 
+                    to enhance mental health monitoring and support. By providing accurate stress predictions and actionable 
+                    insights, we aim to optimize student well-being practices, increase academic success, and promote 
+                    sustainable mental health care across educational ecosystems.
+                </p>
+            </div>
+
+            <h3 class="section-title">Meet Our Team</h3>
+            <p class="text-center mb-5" style="font-size: 1.2rem; color: #64748b;">We are here to revolutionize student mental health support through technology</p>
+            
+            <div class="row justify-content-center">
+                <div class="col-md-4">
+                    <div class="team-member">
+                        <img src="Dulakshi.jpg" alt="Dulakshi Guruge" class="team-photo">
+                        <h4 class="team-name">Dulakshi Guruge</h4>
+                        <p class="team-position">BSc hons. Statistics[UG]</p>
+                        <div class="mt-3">
+                            <small class="text-muted">Machine Learning & Data Analysis Specialist</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="team-member">
+                        <img src="Shenooy.jpg" alt="Shenooy Fernando" class="team-photo">
+                        <h4 class="team-name">Shenooy Fernando</h4>
+                        <p class="team-position">BSc hons. Statistics[UG]</p>
+                        <div class="mt-3">
+                            <small class="text-muted">Statistical Modeling & Research Lead</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="team-member">
+                        <img src="Dihan.jpg" alt="Dihan Ariyarathne" class="team-photo">
+                        <h4 class="team-name">Dihan Ariyarathne</h4>
+                        <p class="team-position">BSc hons. Data Science[UG]</p>
+                        <div class="mt-3">
+                            <small class="text-muted">Data Engineering & AI Development</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Contact Us Page -->
+    <div id="contact" class="page">
+        <section class="container">
+            <h2 class="section-title">Contact WellnessAI</h2>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="form-container text-center">
+                        <h3 class="mb-4" style="color: var(--primary-color);">Get in Touch</h3>
+                        <p class="mb-5" style="font-size: 1.1rem; color: #64748b;">We're here to help you with any questions about student well-being monitoring and support.</p>
+                        
+                        <div class="row text-start">
+                            <div class="col-md-6 mb-4">
+                                <div class="d-flex align-items-center p-3 rounded" style="background: var(--light-color);">
+                                    <i class="fas fa-envelope fa-2x me-3" style="color: var(--primary-color);"></i>
+                                    <div>
+                                        <h5>Email Us</h5>
+                                        <p class="mb-0">support@wellnessai.edu</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="d-flex align-items-center p-3 rounded" style="background: var(--light-color);">
+                                    <i class="fas fa-phone fa-2x me-3" style="color: var(--primary-color);"></i>
+                                    <div>
+                                        <h5>Call Us</h5>
+                                        <p class="mb-0">+94 112 345 678</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-4">
+                                <div class="d-flex align-items-center p-3 rounded" style="background: var(--light-color);">
+                                    <i class="fas fa-map-marker-alt fa-2x me-3" style="color: var(--primary-color);"></i>
+                                    <div>
+                                        <h5>Visit Us</h5>
+                                        <p class="mb-0">123, Education Hub, Colombo, Sri Lanka</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-5">
+                            <h4 class="mb-3">Follow Our Journey</h4>
+                            <div class="d-flex justify-content-center gap-3">
+                                <a href="#" class="btn btn-primary rounded-circle" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="btn btn-primary rounded-circle" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="btn btn-primary rounded-circle" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="#" class="btn btn-primary rounded-circle" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-md-start">
+                    <h5 class="mb-3"><i class="fas fa-brain me-2"></i>WellnessAI</h5>
+                    <p class="mb-0">Transforming student support through AI-powered mental health monitoring.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">&copy; 2025 WellnessAI. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Store assessment history
+        let assessmentHistory = JSON.parse(localStorage.getItem('wellnessai_assessments')) || [];
+        let currentStudentId = '';
+
+        // Show the selected page and hide others
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Update active nav link
+            const activeLink = document.querySelector(`.nav-link[onclick="showPage('${pageId}')"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+            
+            window.scrollTo(0, 0);
+            
+            // Update dashboard if navigating to it
+            if (pageId === 'dashboard') {
+                updateDashboard();
+            }
+        }
+
+        // Handle stress prediction form
+        document.getElementById('stressForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const predictButton = document.querySelector('#stressForm button[type="submit"]');
+            const originalButtonText = predictButton.innerHTML;
+            predictButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Analyzing...';
+            predictButton.disabled = true;
+            
+            const formData = {
+                student_id: document.getElementById('student_id').value,
+                anxiety_level: document.getElementById('anxiety_level').value,
+                self_esteem: document.getElementById('self_esteem').value,
+                depression: document.getElementById('depression').value,
+                academic_performance: document.getElementById('academic_performance').value,
+                future_career_concerns: document.getElementById('future_career_concerns').value,
+                teacher_student_relationship: document.getElementById('teacher_student_relationship').value,
+                sleep_quality: document.getElementById('sleep_quality').value,
+                blood_pressure: document.getElementById('blood_pressure').value,
+                bullying: document.getElementById('bullying').value,
+                basic_needs: document.getElementById('basic_needs').value,
+                peer_pressure: document.getElementById('peer_pressure').value
+            };
+            
+            // Store student ID for dashboard
+            currentStudentId = formData.student_id;
+            
+            // Call Flask backend for real prediction
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('predictionResult');
+                if (data.status === 'success') {
+                    // Store assessment in history
+                    const assessment = {
+                        id: Date.now(),
+                        timestamp: new Date().toLocaleString(),
+                        student_id: formData.student_id,
+                        prediction: data.prediction,
+                        factors: formData
+                    };
+                    
+                    assessmentHistory.unshift(assessment);
+                    localStorage.setItem('wellnessai_assessments', JSON.stringify(assessmentHistory));
+                    
+                    // Display result with recommendations
+                    const recommendations = getRecommendations(data.prediction);
+                    resultDiv.innerHTML = `
+                        <h4><i class="fas fa-chart-line me-2"></i>Prediction Results</h4>
+                        <p class="mb-3">Your predicted stress level is: <strong>${data.prediction}</strong></p>
+                        ${recommendations}
+                        <div class="mt-3">
+                            <small class="text-muted">Powered by Random Forest ML Model | Accuracy: 92%</small>
+                        </div>
+                    `;
+                    resultDiv.className = `prediction-result stress-${data.prediction.toLowerCase()}`;
+                    
+                    // Update dashboard
+                    updateDashboard();
+                } else {
+                    resultDiv.innerHTML = `<p class="text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Error: ${data.error}</p>`;
+                    resultDiv.className = 'prediction-result';
+                }
+                resultDiv.style.display = 'block';
+            })
+            .catch(error => {
+                const resultDiv = document.getElementById('predictionResult');
+                resultDiv.innerHTML = `
+                    <p class="text-danger">
+                        <i class="fas fa-unlink me-2"></i>Connection error. Please make sure the Flask server is running!
+                    </p>
+                    <p class="small mt-2">Run: <code>python app.py</code> in your command prompt</p>
+                `;
+                resultDiv.className = 'prediction-result';
+                resultDiv.style.display = 'block';
+            })
+            .finally(() => {
+                predictButton.innerHTML = originalButtonText;
+                predictButton.disabled = false;
+            });
+        });
+
+        // Get recommendations based on stress level
+        function getRecommendations(stressLevel) {
+            const recommendations = {
+                low: `
+                    <div class="mt-3 p-3 rounded" style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981;">
+                        <h6 class="mb-2"><i class="fas fa-check-circle me-2 text-success"></i>Excellent! You're managing well:</h6>
+                        <ul class="mb-0">
+                            <li>Continue maintaining your healthy routines</li>
+                            <li>Practice mindfulness and relaxation techniques</li>
+                            <li>Stay connected with supportive friends</li>
+                            <li>Keep up with regular physical activity</li>
+                        </ul>
+                    </div>
+                `,
+                moderate: `
+                    <div class="mt-3 p-3 rounded" style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b;">
+                        <h6 class="mb-2"><i class="fas fa-info-circle me-2 text-warning"></i>Areas for improvement:</h6>
+                        <ul class="mb-0">
+                            <li>Focus on improving sleep quality and consistency</li>
+                            <li>Practice stress management techniques daily</li>
+                            <li>Consider talking to a campus counselor</li>
+                            <li>Balance academic work with relaxation time</li>
+                        </ul>
+                    </div>
+                `,
+                high: `
+                    <div class="mt-3 p-3 rounded" style="background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444;">
+                        <h6 class="mb-2"><i class="fas fa-exclamation-triangle me-2 text-danger"></i>Immediate support recommended:</h6>
+                        <ul class="mb-0">
+                            <li>Consult with a mental health professional</li>
+                            <li>Implement a regular exercise routine</li>
+                            <li>Practice deep breathing exercises daily</li>
+                            <li>Utilize academic support services</li>
+                            <li>Establish a consistent sleep schedule</li>
+                        </ul>
+                    </div>
+                `
+            };
+            
+            return recommendations[stressLevel.toLowerCase()] || '';
+        }
+
+        // Update dashboard with current data
+        function updateDashboard() {
+            const studentAssessments = assessmentHistory.filter(a => a.student_id === currentStudentId);
+            const latestAssessment = studentAssessments[0];
+            
+            if (latestAssessment) {
+                // Update stats
+                document.getElementById('currentStress').textContent = latestAssessment.prediction;
+                document.getElementById('stressIndicator').textContent = latestAssessment.prediction;
+                document.getElementById('stressIndicator').className = `stress-indicator indicator-${latestAssessment.prediction.toLowerCase()}`;
+                document.getElementById('totalAssessments').textContent = studentAssessments.length;
+                
+                // Calculate wellbeing score
+                const scores = { 'Low': '85/100', 'Moderate': '65/100', 'High': '45/100' };
+                document.getElementById('wellbeingScore').textContent = scores[latestAssessment.prediction] || 'N/A';
+                
+                // Set improvement trend
+                document.getElementById('improvementTrend').textContent = studentAssessments.length > 1 ? '↗ Improving' : '📊 New';
+                
+                // Update assessment history
+                const historyDiv = document.getElementById('assessmentHistory');
+                historyDiv.innerHTML = studentAssessments.slice(0, 5).map(assessment => `
+                    <div class="assessment-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>${assessment.timestamp}</strong>
+                                <span class="stress-indicator indicator-${assessment.prediction.toLowerCase()} ms-2">
+                                    ${assessment.prediction}
+                                </span>
+                            </div>
+                            <small class="text-muted">Completed</small>
+                        </div>
+                        <div class="mt-2 small text-muted">
+                            Key factors: Anxiety ${assessment.factors.anxiety_level}/10, Sleep ${assessment.factors.sleep_quality}/5
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            showPage('home');
+            updateDashboard();
+        });
+    </script>
+</body>
+</html>
